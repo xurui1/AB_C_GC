@@ -7,7 +7,7 @@ set style line 3 lc rgb "#00ff00" lt 1 lw 1.5
 
   
 set xrange [0:6]
-set yrange [0:8]
+set yrange [0:6]
 set zrange [0:1]
 set xlabel "r"
 set ylabel "z"

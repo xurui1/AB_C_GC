@@ -98,6 +98,9 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
         }
     }
     
+    phi_calc(phi[0],phi[1],phi[2],drz);
+    
+    
     
     //clearing the memory
     destroy_3d_double_array(qA);
