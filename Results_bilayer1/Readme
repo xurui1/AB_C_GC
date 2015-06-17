@@ -1,0 +1,1 @@
+Attempt at achieving the bilayer configuration. Not quite. I get the bilayer, but haven’t achieved the homogenous solvent the boundaries. Not sure what to do. Perhaps modifying the chemical potential would help. The chemical potential is currently set at zero for both - pushing some of the diblock out of the system could help.

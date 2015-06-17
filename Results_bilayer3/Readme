@@ -1,0 +1,1 @@
+Attempt at achieving the bilayer configuration. Changed kappa to 1.0, muC to 0, used different initial condition. Still basically the same result. I also changed the z-direction to be 6 instead of 10, doesn’t seem to have made a large difference. Running out of ideas.

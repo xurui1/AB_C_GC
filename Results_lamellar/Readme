@@ -1,0 +1,1 @@
+Nice Lamellar structure. Still need to do things like determine excess free energy (calculate homogeneous free energy), etc. Lamellar structure achieved starting with the bilayer condition (bilayer along r), but chemical potential (muC=-2) forced the solvent out. Also probably need to consider that kappa was set to 1.55. Maybe a bit too long, should set back to 1.0 for now.
