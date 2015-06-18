@@ -1,0 +1,1 @@
+Fully converged bilayer. Changed chemical potential muC from -4 (bilayer 7) to -3.906, the chemical potential calculated using the secant method in the old Fortran code to give the lowest free energy. There appears to be a slight discrepancy between phiA and phiB which is worrying me (phiA=0.176923 and phiB=0.175466). Not sure what might be causing this problem.

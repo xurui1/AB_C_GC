@@ -1,3 +1,5 @@
+
+//Build LHS matrix (non-zero elements) for ADI step #2
 void Matrix_r(int ii, double **w, double *drz, double ds, double *rmid, double *rupper, double *rlower){
     int i;
     
@@ -21,6 +23,7 @@ void Matrix_r(int ii, double **w, double *drz, double ds, double *rmid, double *
     
 }
 
+//Build LHS matrix (non-zero elements) for ADI step #1
 void Matrix_z(int ii, double **w, double *drz, double ds, double *zmid, double *zupper, double *zlower){
     int i;
     
@@ -40,7 +43,7 @@ void Matrix_z(int ii, double **w, double *drz, double ds, double *zmid, double *
     
 }
 
-
+//Apply ADI method to solve the modified diffusion equation in 2D cylindrical coordinates
 void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, double *drz){
 
     int            i,j,s;  // some counters
@@ -54,22 +57,25 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
     double *rupper;
     double *rlower;
     
+    //Allocate memory for `matrix' operations
     bvecr=create_1d_double_array(Nr, "bvecr");
     bvecz=create_1d_double_array(Nz, "bvecz");
     zmid=create_1d_double_array(Nz, "zmid");
-    zupper=create_1d_double_array(int(Nz-1), "zupper");
-    zlower=create_1d_double_array(int(Nz-1), "zlower");
+    zupper=create_1d_double_array((int)Nz-1, "zupper");
+    zlower=create_1d_double_array((int)Nz-1, "zlower");
     rmid=create_1d_double_array(Nr, "rmid");
-    rupper=create_1d_double_array(int(Nr-1), "rupper");
-    rlower=create_1d_double_array(int(Nr-1), "rlower");
+    rupper=create_1d_double_array((int)Nr-1, "rupper");
+    rlower=create_1d_double_array((int)Nr-1, "rlower");
     
     
     for (s=0;s<int(Ns+1);s++){
         
+        //Empty RHS vector
         for (j=0;j<Nz;j++){
             bvecz[j]=0.0;
         }
         
+        //Step 1-scan over z for all r
         for (i=0;i<Nr;i++){
             Matrix_z(i,w,drz,ds,zmid,zupper,zlower);
             
@@ -98,30 +104,32 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
                     bvecz[j]=gamma*qint[i][j]+betaL*qint[i-1][j]+betaU*qint[i+1][j];
                 }
             }
+            //Use TDMA to solve matrix algebra problem
             TDMA(bvecz,Nz,zlower,zmid,zupper);
             
             for (j=0;j<Nz;j++){
-                //cout<<s<<" "<<i<<" "<<j<<" "<<qint[i][j]<<endl;
                 q[i][j][s]=bvecz[j];
             }
-            //cout<<s<<" "<<i<<" "<<j<<" "<<q[i][j][s]<<endl;
             
         }
+        //Re-empty RHS vector. Probably not necessary
         for (j=0;j<Nz;j++){
             bvecz[j]=0.0;
         }
         
+        //Intermediate Step
         for (i=0;i<Nr;i++){
             for (j=0;j<Nz;j++){
                 qint[i][j]=q[i][j][s];
-                //cout<<"intermediate step 1: "<<s<<" "<<i<<" "<<j<<" "<<qint[i][j]<<endl;
             }
         }
         
+        //Empty RHS vector #2
         for (i=0;i<Nr;i++){
             bvecr[i]=0.0;
         }
         
+        //Step 2-scan over i for all z
         for (j=0;j<Nz;j++){
             Matrix_r(j,w,drz,ds,rmid,rupper,rlower);
             
@@ -139,38 +147,23 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
                        bvecr[i]=gamma*qint[i][j]+betaL*qint[i][j-1]+betaU*qint[i][j+1];
                    }
                }
+            //Use TDMA to solve matrix algebra problem
             TDMA(bvecr,Nr,rlower,rmid,rupper);
             
+            //Now we have our solution for all i,j for s, from s-1. Full step completed.
             for (i=0;i<Nr;i++){
                 q[i][j][s]=bvecr[i];
             }
         }
-        
+        //Empty RHS vector #2- probably not necessary
         for (i=0;i<Nr;i++){
             bvecr[i]=0.0;
         }
         
-        for (i=0;i<Nr;i++){
-            for (j=0;j<Nz;j++){
-                qint[i][j]=q[i][j][s];
-                //cout<<"intermediate step 2: "<<i<<" "<<j<<" "<<qint[i][j]<<endl;
-                //cout<<"propogator: "<<i<<" "<<j<<" "<<q[i][j][s]<<endl;
-            }
-        }
-        
-        
 
     }
     
-    //Check the output
-    /*for (s=0;s<int(Ns+1);s++){
-        for (i=0;i<Nr;i++){
-            for (j=0;j<Nz;j++){
-                cout<<s<<" "<<i<<" "<<j<<" "<<q[i][j][s]<<endl;
-            }
-        }
-    }*/
-    
+    //Deallocate memory
     destroy_1d_double_array(bvecr);
     destroy_1d_double_array(bvecz);
     destroy_1d_double_array(zmid);

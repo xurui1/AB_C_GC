@@ -3,7 +3,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
     
     double  currentfE, oldfE, deltafE;
     int     maxIter=10000;
-    double precision=1e-6;
+    double precision=1e-6;          //convergence condition
     int     i,j,iter,chain,ii,jj;
     double  Q;
     double  fEW, fEchi, fES;
@@ -13,6 +13,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
     double  ***newW;
     double  deltaW;
     
+    //Arrays for updating the omega fields
     delW=create_3d_double_array(ChainType,Nr,Nz,"delW");
     delphi=create_2d_double_array(Nr,Nz,"delphi");
     newW=create_3d_double_array(ChainType,Nr,Nz,"newW");
@@ -32,11 +33,11 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
         fEchi=0.0;
         fES=0.0;
         
-        Q=Conc(phi,w,Ns,ds,drz,mu);
+        Q=Conc(phi,w,Ns,ds,drz,mu);          //Calculate Chain partition function for both AB and C
         
-        Incomp(eta,phi,delphi);
-        Pin(sigma,phi,tip);
-        output(drz,phi,w);
+        Incomp(eta,phi,delphi);              //Enforce incompressibility condition
+        Pin(sigma,phi,tip);                  //Enforce pinning condition if turned on (initial=2,4)
+        output(drz,phi,w);                   //Output some data to file
         
         
         fEW=0.0;
@@ -44,6 +45,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
         deltaW=0.0;
 
         
+        //clear omega field update
         for(i=0;i<Nr;i++){
             for(j=0;j<Nz;j++){
                     for(ii=0;ii<ChainType;ii++){
@@ -52,6 +54,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
             }
         }
         
+        //Calculate components for new field and interaction free energy
         for(i=0;i<Nr;i++){
             for(j=0;j<Nz;j++){
                 
@@ -67,20 +70,22 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
                 }
             }
         }
+        //Normalize by box size
         deltaW/=(Nr*Nz);
         fEchi/=(2.0*((Nr*drz[0])*(Nz*drz[1])));
         fEW/=(((Nr*drz[0])*(Nz*drz[1])));
         
+        //Update free energy
         fES=Q;
-        
         oldfE=currentfE;
         currentfE=-fES-fEW+fEchi;
-        
         deltafE=fabs(currentfE-oldfE);
         
+        //Print free energy, difference in free energy, change in omega field to screen
         std::cout<<iter<<" fE:"<<currentfE<< " dfE:"<<currentfE-fE_hom<<" " << deltaW<<std::endl;
         outputFile << iter << " " << currentfE<< " " << currentfE-fE_hom<<" "<< deltaW<<std::endl;
         
+        //Update omega field. Can we add Anderson mixing for this system?
         for(i=0;i<Nr;i++){
             for(j=0;j<Nz;j++){
                     for(chain=0;chain<ChainType;chain++){
@@ -90,7 +95,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
         }
         
         
-    }while((iter<maxIter)&&(deltafE>precision)&&(deltaW>precision));
+    }while((iter<maxIter)&&(deltafE>precision)&&(deltaW>precision)); //Convergence condition
     
     outputFile.close();
     

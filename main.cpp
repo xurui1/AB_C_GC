@@ -30,6 +30,7 @@ int main( ){
     double **chiMatrix;
     double fE_hom;
     
+    //Allocate memory
     w=create_3d_double_array(ChainType,Nr,Nz,"w");          //Auxiliary potential fields
     eta=create_2d_double_array(Nr,Nz,"eta");                //Incompressibility field
     sigma=create_2d_double_array(Nr, Nz, "sigma");          //Pinning condition field
@@ -57,13 +58,10 @@ int main( ){
     //Set up initial omega field
     omega(w);
     
-    //Where the real stuff happens
+    //SCFT
     FreeEnergy(w,phi,eta,Ns,ds,chi,drz,chiMatrix,sigma,tip,mu,fE_hom);
     
-    
-    
     //Destroy memory allocations------------
-    
     destroy_3d_double_array(w);
     destroy_2d_double_array(eta);
     destroy_3d_double_array(phi);
@@ -73,7 +71,6 @@ int main( ){
     destroy_1d_double_array(drz);
     destroy_2d_double_array(chiMatrix);
     //-------------------------------------
-    
     
     return 0;
 }

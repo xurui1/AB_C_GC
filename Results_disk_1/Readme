@@ -1,0 +1,1 @@
+First try at creating disk configuration in box size z=11,r=10. Seems to have worked nicely with muC=-3.906. However, still small problem with concentration (phiA: 0.104403 phiB: 0.100784). Where could this be coming from? The concentration profile looks nice though, like it converged properly.

@@ -1,0 +1,1 @@
+Same as bilayer_8, except change muC to -3.806. dfE increased slightly, which means that muC=-3.906 is likely the chemical potential for the `tensionless bilayer’. This complements the result from the old fortran code in a rough manner. I’m going to increase the box size slightly and see if that makes a difference.

@@ -6,7 +6,7 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     phiA_tot=0.0;
     phiB_tot=0.0;
     phiC_tot=0.0;
-    double phi_tot;
+    double phi_tot=0.0;
     int i,j;
     
     /*
@@ -55,8 +55,10 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     */
     //centre
     
-    for (i=0;i<int(Nr);i++){
-        for (j=0;j<int(Nz);j++){
+    //This is the way that the incompressibility condition is calculated, although I'm possibly making a mistake here.
+    
+    for (i=0;i<Nr;i++){
+        for (j=0;j<Nz;j++){
             phiA_tot+=phiA[i][j];
             phiB_tot+=phiB[i][j];
             phiC_tot+=phiC[i][j];

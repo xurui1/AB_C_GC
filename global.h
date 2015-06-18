@@ -15,7 +15,6 @@ using namespace std;
 #define Pi 3.14159
 
 
-double z1, z2, kappa, kappa2;
-double bond_energy, N_bond;
+double kappa;
 double r_0;
 int initial;

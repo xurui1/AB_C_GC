@@ -3,17 +3,20 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     int         i,j,s;
     double      Q,Q_AB,Q_C;
     double      ***qA,***qB,***qC,***qdagA,***qdagB;
-    double      **qint,**qintA,**qintB,**qintC;
+    double      **qintA,**qintB,**qintC;
     
     
     
-    
+    //Forwards propagators
     qA=create_3d_double_array(Nr,Nz,((int)Ns[0]+1),"qA");
     qB=create_3d_double_array(Nr,Nz,((int)Ns[1]+1),"qB");
     qC=create_3d_double_array(Nr,Nz,((int)Ns[2]+1),"qC");
+    
+    //Complementary propagators
     qdagA=create_3d_double_array(Nr,Nz,((int)Ns[0]+1),"qdagA");
     qdagB=create_3d_double_array(Nr,Nz,((int)Ns[1]+1),"qdagB");
-    qint=create_2d_double_array(Nr,Nz,"qint");
+    
+    //Intermediate steps for ADI
     qintA=create_2d_double_array(Nr,Nz,"qintA");
     qintB=create_2d_double_array(Nr,Nz,"qintB");
     qintC=create_2d_double_array(Nr,Nz,"qintC");
@@ -29,7 +32,7 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
         }
     }
     
-    // Here we will solve the diffusion question
+    // Here we solve the diffusion equation for the forwards propagators
     solvediffyQ(qA,w[0],qintA,ds,(int)Ns[0],drz);
     solvediffyQ(qB,w[1],qintB,ds,(int)Ns[1],drz);
     solvediffyQ(qC,w[2],qintC,ds,(int)Ns[2],drz);
@@ -37,8 +40,8 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     // The result from the above calculation becomes qdags initial cond
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
-                qintA[i][j]=qB[i][j][(int)Ns[0]];
-                qintB[i][j]=qA[i][j][(int)Ns[1]];
+                qintA[i][j]=qB[i][j][(int)Ns[1]];
+                qintB[i][j]=qA[i][j][(int)Ns[0]];
                 //std::cout<<qintA[i][j][l]<< "----"<<qintB[i][j][l] <<std::endl;
         }
     }
@@ -46,7 +49,6 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     // Here we will solve the diffusion equation for the complementory qs
     solvediffyQ(qdagA,w[0],qintA,ds,(int)Ns[0],drz);
     solvediffyQ(qdagB,w[1],qintB,ds,(int)Ns[1],drz);
-    //solvediffyQ(qC,w[2],qintC,ds,(int)Ns[2],drz);
     
     // Here we are doing the sum to get the single chain partition function
     Q=0.0;
@@ -58,6 +60,7 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
             Q_C+=qC[i][j][(int)Ns[2]]*drz[0]*drz[1];
         }
     }
+    //I'm adding the two single chain partition functions together for the return function
     Q=exp(mu[0])*Q_AB+(exp(mu[1]*kappa)*Q_C)/kappa;
     // Normalizing with respect to the volume of the box
     Q/=((drz[0]*Nr)*(drz[1]*Nz));
@@ -67,10 +70,12 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
             
+                //Empty array element
                 phi[0][i][j]=0.0;
                 phi[1][i][j]=0.0;
                 phi[2][i][j]=0.0;
-                
+            
+                //phiA integration
                 for(s=0;s<(Ns[0]+1);s++){
                     if(s==0 || s==(int)Ns[0]){
                         phi[0][i][j]+=0.5*qA[i][j][s]*qdagA[i][j][(int)Ns[0]-s]*ds;
@@ -78,6 +83,8 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
                         phi[0][i][j]+=qA[i][j][s]*qdagA[i][j][(int)Ns[0]-s]*ds;
                     }
                 }
+            
+                //phiB integration
                 for(s=0;s<(Ns[1]+1);s++){
                     if(s==0 || s==(int)Ns[1]){
                         phi[1][i][j]+=0.5*qB[i][j][s]*qdagB[i][j][(int)Ns[1]-s]*ds;
@@ -86,6 +93,7 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
                     }
                 }
             
+                //phiC integration
                 for(s=0;s<(Ns[2]+1);s++){
                     if(s==0 || s==(int)Ns[2]){
                         phi[2][i][j]+=0.5*qC[i][j][s]*qC[i][j][(int)Ns[2]-s]*ds;
@@ -93,12 +101,15 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
                         phi[2][i][j]+=qC[i][j][s]*qC[i][j][(int)Ns[2]-s]*ds;
                     }
                 }
+            
+                //Grand canonical stuff
                 phi[0][i][j]=exp(mu[0])*phi[0][i][j];
                 phi[1][i][j]=exp(mu[0])*phi[1][i][j];
                 phi[2][i][j]=exp(mu[1]*kappa)*phi[2][i][j]*(1.0/kappa);
         }
     }
     
+    //calculation of average concentrations over entire computation box
     phi_calc(phi[0],phi[1],phi[2],drz);
     
     
@@ -109,7 +120,6 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     destroy_3d_double_array(qC);
     destroy_3d_double_array(qdagA);
     destroy_3d_double_array(qdagB);
-    destroy_2d_double_array(qint);
     destroy_2d_double_array(qintA);
     destroy_2d_double_array(qintB);
     destroy_2d_double_array(qintC);

@@ -1,0 +1,1 @@
+Changed the box size in the z-direction from 10 to 11 Rg(?). The dfE dropped, which makes sense because it’s the same energy penalty for having the membrane, but divided by a larger area for the computational box. Does this mean that the box is large enough? I’m not sure. Still having a problem with the concentration (phiA: 0.157787 phiB: 0.156258). muC was set back to -3.906.
