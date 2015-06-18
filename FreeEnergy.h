@@ -3,7 +3,7 @@ void FreeEnergy(double ***w, double ***phi, double **eta, double *Ns, double ds,
     
     double  currentfE, oldfE, deltafE;
     int     maxIter=10000;
-    double precision=1e-5;
+    double precision=1e-6;
     int     i,j,iter,chain,ii,jj;
     double  Q;
     double  fEW, fEchi, fES;

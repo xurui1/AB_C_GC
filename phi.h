@@ -1,6 +1,6 @@
 void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     
-    //Here I am calculating the total concentration of each species using a trapezoidal (?) rule
+    //Here I am calculating the total concentration of each species using a trapezoidal (?) rule. I removed the trapezoidal component because I don't think it should matter too much if we are using the Neumann boundary condition. Alternatively, I think I would have to modify the incompressibility condition.
     
     double phiA_tot,phiB_tot,phiC_tot;
     phiA_tot=0.0;
@@ -9,6 +9,7 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     double phi_tot;
     int i,j;
     
+    /*
     //corners
     phiA_tot+=0.25*phiA[0][0];
     phiB_tot+=0.25*phiB[0][0];
@@ -51,11 +52,11 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
         phiB_tot+=0.5*phiB[i][j];
         phiC_tot+=0.5*phiC[i][j];
     }
-    
+    */
     //centre
     
-    for (i=1;i<int(Nr-1);i++){
-        for (j=1;j<int(Nz-1);j++){
+    for (i=0;i<int(Nr);i++){
+        for (j=0;j<int(Nz);j++){
             phiA_tot+=phiA[i][j];
             phiB_tot+=phiB[i][j];
             phiC_tot+=phiC[i][j];

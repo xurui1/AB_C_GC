@@ -17,8 +17,8 @@ void parameters(double *chi,double *f,double &ds,double *Ns,double *drz,double *
     tip[0]=20;
     tip[1]=24;
     
-    mu[0]=-1.0;
-    mu[1]=0.0;
+    mu[0]=0.0;
+    mu[1]=-4.0;
     
     f[0]=0.5;
     f[1]=1.0-f[0];
@@ -28,8 +28,8 @@ void parameters(double *chi,double *f,double &ds,double *Ns,double *drz,double *
     Ns[1]=(int)(Ds*f[1]);
     Ns[2]=(int)(Ds*f[2]);
     
-    drz[0]=0.12;
-    drz[1]=0.12;
+    drz[0]=0.2;
+    drz[1]=0.2;
     
     ds=1.0/Ds;
     

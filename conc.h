@@ -16,29 +16,30 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     qint=create_2d_double_array(Nr,Nz,"qint");
     qintA=create_2d_double_array(Nr,Nz,"qintA");
     qintB=create_2d_double_array(Nr,Nz,"qintB");
+    qintC=create_2d_double_array(Nr,Nz,"qintC");
     
     
     // Here is the for loop for doing the initial conditions setting it to 1.0
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
-            qint[i][j]=1.0;
-            qA[i][j][0]=1.0;
-            qB[i][j][0]=1.0;
-            qC[i][j][0]=1.0;
+            qintA[i][j]=1.0;
+            qintB[i][j]=1.0;
+            qintC[i][j]=1.0;
+            //qC[i][j][0]=1.0;
         }
     }
     
     // Here we will solve the diffusion question
-    solvediffyQ(qA,w[0],qint,ds,(int)Ns[0],drz);
-    solvediffyQ(qB,w[1],qint,ds,(int)Ns[1],drz);
-    solvediffyQ(qC,w[2],qint,ds,(int)Ns[2],drz);
+    solvediffyQ(qA,w[0],qintA,ds,(int)Ns[0],drz);
+    solvediffyQ(qB,w[1],qintB,ds,(int)Ns[1],drz);
+    solvediffyQ(qC,w[2],qintC,ds,(int)Ns[2],drz);
     
     // The result from the above calculation becomes qdags initial cond
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
                 qintA[i][j]=qB[i][j][(int)Ns[0]];
                 qintB[i][j]=qA[i][j][(int)Ns[1]];
-                //std::cout<<qintB[i][j][l]<< "----"<<qintB[i][j][l] <<std::endl;
+                //std::cout<<qintA[i][j][l]<< "----"<<qintB[i][j][l] <<std::endl;
         }
     }
     
@@ -111,6 +112,7 @@ double Conc(double ***phi,double ***w,double *Ns,double ds,double *drz, double *
     destroy_2d_double_array(qint);
     destroy_2d_double_array(qintA);
     destroy_2d_double_array(qintB);
+    destroy_2d_double_array(qintC);
     
     
     return Q;
