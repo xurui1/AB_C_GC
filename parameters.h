@@ -1,17 +1,17 @@
-void parameters(double *chi,double *f,double &ds,double *Ns,double *drz,double **chiMatrix,int *tip, double *mu){
+void parameters(double *chi,double *f,double &ds,int *Ns,double *drz,double **chiMatrix,int *tip, double *mu){
     
     int Ds=100;
     
-    initial=4;
+    initial=1;
     
     //Length ratio of c homopolymer to diblock copolymer
     kappa=1.0;
     
     r_0=10.0;   //Distance from i=0 to the centre of the cylindre
     
-    //Interaction vector
-    chi[0]=30.0;
-    chi[1]=30.0;
+    //Interactions
+    chi[0]=20.0;
+    chi[1]=20.0;
     chi[2]=0.0;
     
      //Pore Location
@@ -20,7 +20,7 @@ void parameters(double *chi,double *f,double &ds,double *Ns,double *drz,double *
     
     //Chemical potential array
     mu[0]=0.0;
-    mu[1]=-3.906;
+    mu[1]=-10.0;
     
     //Chain fraction array
     f[0]=0.5;
@@ -28,13 +28,15 @@ void parameters(double *chi,double *f,double &ds,double *Ns,double *drz,double *
     f[2]=kappa*1.0;
     
     //Chain length array
-    Ns[0]=(int)(Ds*f[0]);
-    Ns[1]=(int)(Ds*f[1]);
-    Ns[2]=(int)(Ds*f[2]);
+    Ns[0]=(Ds*f[0]);
+    Ns[1]=(Ds*f[1]);
+    Ns[2]=(Ds*f[2]);
+    
+    cout<<Ns[0]<<" "<<Ns[1]<<" "<<Ns[2]<<endl;
     
     //Step size in r,z direction
-    drz[0]=0.12;
-    drz[1]=0.2;
+    drz[0]=0.08;
+    drz[1]=0.08;
     
     //Step length along polymer
     ds=1.0/Ds;

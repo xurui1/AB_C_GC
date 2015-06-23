@@ -31,14 +31,22 @@ double *create_1d_double_array(int n1, const char *name){
     return array;
 }
 
+
+
+
+void destroy_1d_double_array(double *array){
+    
+    if (array == NULL) return;
+    sfree(array);
+}
+
 int *create_1d_integer_array(int n1, const char *name){
     
     int *array = (int *) smalloc(n1*sizeof(int),name);
     return array;
 }
 
-
-void destroy_1d_double_array(double *array){
+void destroy_1d_integer_array(int *array){
     
     if (array == NULL) return;
     sfree(array);

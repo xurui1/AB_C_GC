@@ -25,7 +25,7 @@ int main( ){
     double *f;
     double *mu;
     double ds;
-    double *Ns;
+    int *Ns;
     double *drz;
     double **chiMatrix;
     double fE_hom;
@@ -37,7 +37,7 @@ int main( ){
     phi=create_3d_double_array(ChainType,Nr,Nz,"phi");      //Concentration fields
     chi=create_1d_double_array(ChainType,"chi");            //Interaction parameters
     f=create_1d_double_array(ChainType,"f");                //Chain fractions
-    Ns=create_1d_double_array(ChainType,"Ns");              //Chain lengths
+    Ns=create_1d_integer_array(ChainType, "Ns");            //Chain lengths
     drz=create_1d_double_array(2,"drz");                    //Grid spacing
     mu=create_1d_double_array(2, "mu");                     //Chemical potentials
     tip=create_1d_integer_array(2,"tip");                   //Pore tip location
@@ -66,7 +66,8 @@ int main( ){
     destroy_2d_double_array(eta);
     destroy_3d_double_array(phi);
     destroy_1d_double_array(chi);
-    destroy_1d_double_array(Ns);
+    destroy_1d_integer_array(Ns);
+    destroy_1d_integer_array(tip);
     destroy_1d_double_array(f);
     destroy_1d_double_array(drz);
     destroy_2d_double_array(chiMatrix);

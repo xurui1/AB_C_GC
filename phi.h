@@ -3,6 +3,7 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     //Here I am calculating the total concentration of each species using a trapezoidal (?) rule. I removed the trapezoidal component because I don't think it should matter too much if we are using the Neumann boundary condition. Alternatively, I think I would have to modify the incompressibility condition.
     
     double phiA_tot,phiB_tot,phiC_tot;
+    double volume;
     phiA_tot=0.0;
     phiB_tot=0.0;
     phiC_tot=0.0;
@@ -59,15 +60,18 @@ void phi_calc(double **phiA, double **phiB, double **phiC, double *drz){
     
     for (i=0;i<Nr;i++){
         for (j=0;j<Nz;j++){
-            phiA_tot+=phiA[i][j];
-            phiB_tot+=phiB[i][j];
-            phiC_tot+=phiC[i][j];
+            phiA_tot+=drz[1]*(drz[0]*(double)i+r_0)*drz[0]*phiA[i][j];
+            phiB_tot+=drz[1]*(drz[0]*(double)i+r_0)*drz[0]*phiB[i][j];
+            phiC_tot+=drz[1]*(drz[0]*(double)i+r_0)*drz[0]*phiC[i][j];
         }
     }
     
-    phiA_tot/=Nr*Nz;
-    phiB_tot/=Nr*Nz;
-    phiC_tot/=Nr*Nz;
+    //Volume calculation
+    volume=(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*(double)Nz);
+    //normalize
+    phiA_tot/=volume;
+    phiB_tot/=volume;
+    phiC_tot/=volume;
     phi_tot=phiA_tot+phiB_tot+phiC_tot;
     
     cout<<"phiA: "<<phiA_tot<<" phiB: "<<phiB_tot<<" phiC: "<<phiC_tot<<" total: "<<phi_tot<<endl;
