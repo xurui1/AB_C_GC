@@ -9,8 +9,8 @@ void Pin(double **sigma, double ***phi, int *tip){
     }
     
     if (initial==2 || initial==4){
-        Ntip=int(tip[0]);
-        Mtip=int(tip[1]);
+        Ntip=tip[0];
+        Mtip=tip[1];
         sigma[Ntip][Mtip]=sigma[Ntip][Mtip]-10.0*(phi[0][Ntip][Mtip]+phi[2][Ntip][Mtip]-phi[1][Ntip][Mtip]);
     }
 }

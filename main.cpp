@@ -5,6 +5,7 @@
 #include "TDMA.h"
 #include "solvediffeq.h"
 #include "phi.h"
+#include "Q_partition.h"
 #include "Conc.h"
 #include "Incomp.h"
 #include "pin.h"

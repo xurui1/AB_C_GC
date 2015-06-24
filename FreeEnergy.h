@@ -63,19 +63,19 @@ void FreeEnergy(double ***w, double ***phi, double **eta, int *Ns, double ds, do
                         for(jj=0;jj<ChainType;jj++){
                             
                             newW[ii][i][j]+=((chiMatrix[ii][jj]*phi[jj][i][j])+eta[i][j]+sigma[i][j]);
-                            fEchi+=phi[ii][i][j]*chiMatrix[ii][jj]*phi[jj][i][j]*((double)i*(double)drz[0]+r_0)*((double)drz[0])*((double)drz[1]);
+                            fEchi+=phi[ii][i][j]*chiMatrix[ii][jj]*phi[jj][i][j]*((double)i*drz[0]+r_0)*(drz[0])*(drz[1]);
                         }
-                        fEW+=(newW[ii][i][j]*phi[ii][i][j]*((double)i*(double)drz[0]+r_0)*((double)drz[0])*((double)drz[1]));
+                        fEW+=(newW[ii][i][j]*phi[ii][i][j]*((double)i*drz[0]+r_0)*(drz[0])*(drz[1]));
                         delW[ii][i][j]=newW[ii][i][j]-w[ii][i][j];
                         deltaW+=fabs(delW[ii][i][j]);
                 }
             }
         }
         //Normalize by box size
-        volume=Pi*(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*(double)Nz);
-        deltaW/=volume;
-        fEchi/=2.0*volume;
-        fEW/=volume;
+        volume=Pi*(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*((double)Nz-1));
+        deltaW/=volume/(2.0*Pi);
+        fEchi/=volume/(Pi);
+        fEW/=volume/(2.0*Pi);
        
         //Update free energy
         fES=Q;

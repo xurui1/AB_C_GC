@@ -2,7 +2,7 @@ void parameters(double *chi,double *f,double &ds,int *Ns,double *drz,double **ch
     
     int Ds=100;
     
-    initial=1;
+    initial=0;
     
     //Length ratio of c homopolymer to diblock copolymer
     kappa=1.0;
@@ -35,8 +35,8 @@ void parameters(double *chi,double *f,double &ds,int *Ns,double *drz,double **ch
     cout<<Ns[0]<<" "<<Ns[1]<<" "<<Ns[2]<<endl;
     
     //Step size in r,z direction
-    drz[0]=0.08;
-    drz[1]=0.08;
+    drz[0]=0.16;
+    drz[1]=0.16;
     
     //Step length along polymer
     ds=1.0/Ds;

@@ -69,7 +69,7 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
     rlower=create_1d_double_array(Nr-1, "rlower");
     
     
-    for (s=0;s<(int)Ns+1;s++){
+    for (s=1;s<(int)Ns+1;s++){
         
         //Empty RHS vector
         for (j=0;j<Nz;j++){

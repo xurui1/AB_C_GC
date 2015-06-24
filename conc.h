@@ -1,7 +1,7 @@
 double Conc(double ***phi,double ***w,int *Ns,double ds,double *drz, double *mu){
     
     int         i,j,s;
-    double      Q,Q_AB,Q_C;
+    double      Q;
     double      volume;
     double      ***qA,***qB,***qC,***qdagA,***qdagB;
     double      **qintA,**qintB,**qintC;
@@ -56,73 +56,21 @@ double Conc(double ***phi,double ***w,int *Ns,double ds,double *drz, double *mu)
     solvediffyQ(qdagA,w[0],qintA,ds,Ns[0],drz);
     solvediffyQ(qdagB,w[1],qintB,ds,Ns[1],drz);
     
-    // Here we are doing the sum to get the single chain partition function
-    Q=0.0;
-    Q_AB=0.0;
-    Q_C=0.0;
-    for(i=0;i<Nr;i++){
-        for(j=0;j<Nz;j++){
-            Q_AB+=qdagB[i][j][Ns[1]]*((double)i*(double)drz[0]+r_0)*((double)drz[0])*((double)drz[1]);
-            Q_C+=qC[i][j][Ns[2]]*((double)i*(double)drz[0]+r_0)*((double)drz[0])*((double)drz[1]);
-        }
-    }
-    Q_AB=exp(mu[0])*Q_AB;
-    Q_C=(exp(mu[1]*kappa)*Q_C)/kappa;
-    cout<<"Q_AB: "<<Q_AB<<" Q_C: "<<Q_C<<endl;
-    //I'm adding the two single chain partition functions together for the return function
-    Q=Q_AB+Q_C;
+    // Here we are get the single chain partition functions Q_AB+Q_C
+    Q=q_partition(qdagB,qC,drz,Ns,mu);
+    
 
     // Normalizing with respect to the volume of the box
-    volume=(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*(double)Nz);
-    Q/=volume;
+    volume=Pi*(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*((double)Nz-1.0));
+    Q/=volume/(2.0*Pi);
     
     cout<<"Q: "<< Q<<endl;
     
     // Here we do the concentration calculation by integration over box and chain
-    for(i=0;i<Nr;i++){
-        for(j=0;j<Nz;j++){
-            
-                //Empty array elements
-                phi[0][i][j]=0.0;
-                phi[1][i][j]=0.0;
-                phi[2][i][j]=0.0;
-            
-                //phiA integration
-                for(s=0;s<(int)(Ns[0]+1);s++){
-                    if(s==0 || s==(int)Ns[0]){
-                        phi[0][i][j]+=0.5*qA[i][j][s]*qdagA[i][j][Ns[0]-s]*ds;
-                    }else{
-                        phi[0][i][j]+=qA[i][j][s]*qdagA[i][j][Ns[0]-s]*ds;
-                    }
-                }
-            
-                //phiB integration
-                for(s=0;s<(int)(Ns[1]+1);s++){
-                    if(s==0 || s==(int)Ns[1]){
-                        phi[1][i][j]+=0.5*qB[i][j][s]*qdagB[i][j][Ns[1]-s]*ds;
-                    }else{
-                        phi[1][i][j]+=qB[i][j][s]*qdagB[i][j][Ns[1]-s]*ds;
-                    }
-                }
-            
-                //phiC integration
-                for(s=0;s<(int)(Ns[2]+1);s++){
-                    if(s==0 || s==(int)Ns[2]){
-                        phi[2][i][j]+=0.5*qC[i][j][s]*qC[i][j][Ns[2]-s]*ds;
-                    }else{
-                        phi[2][i][j]+=qC[i][j][s]*qC[i][j][Ns[2]-s]*ds;
-                    }
-                }
-            
-                //Grand canonical relation
-                phi[0][i][j]=exp(mu[0])*phi[0][i][j];
-                phi[1][i][j]=exp(mu[0])*phi[1][i][j];
-                phi[2][i][j]=exp(mu[1]*kappa)*phi[2][i][j]*(1.0/kappa);
-        }
-    }
-    
+    phi_calc(phi,qA,qdagA,qB,qdagB,qC,Ns,mu,ds);
+
     //calculation of average concentrations over entire computation box
-    phi_calc(phi[0],phi[1],phi[2],drz);
+    phi_total(phi[0],phi[1],phi[2],drz);
     
     
     

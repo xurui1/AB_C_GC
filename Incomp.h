@@ -15,9 +15,7 @@ void Incomp(double **eta, double ***phi, double **delphi){
                 for(chain=0;chain<ChainType;chain++){
                     ptot+=phi[chain][i][j];
                 }
-            
-            //Is this right for a 2d system? Or, do I need to use some other type of integration method?
-                
+                            
                 delphi[i][j]=1.0-ptot;
                 eta[i][j]-=delphi[i][j];
                 
