@@ -3,12 +3,13 @@ void omega(double ***w){
     int i,j,x;
     
     //This is for a sinusoidal initial omega field. Adjust 'initial' in the parameters header.
+    //Currently will give a lamellar structure in z-direction
     if (initial==0){
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
-            w[0][i][j]=-10.0*cos(Pi*(double)j/(double)Nz);
-            w[1][i][j]=10.0*cos(Pi*(double)j/(double)Nz);
-            w[2][i][j]=10.0;
+            w[0][i][j]=-5.0*cos(4.0*Pi*(double)j/(double)Nz);
+            w[1][i][j]=5.0*cos(4.0*Pi*(double)j/(double)Nz);
+            w[2][i][j]=5.0;
         }
     }
     }

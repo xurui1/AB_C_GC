@@ -24,12 +24,17 @@ double Conc(double ***phi,double ***w,int *Ns,double ds,double *drz, double *mu)
     qintC=create_2d_double_array(Nr,Nz,"qintC");
     
     
-    // Here is the for loop for doing the initial conditions setting it to 1.0
+    // Here is the for loop for setting the propagator initial conditions to 1.0
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
             qintA[i][j]=1.0;
+            qA[i][j][0]=1.0;
+           
             qintB[i][j]=1.0;
+            qB[i][j][0]=1.0;
+            
             qintC[i][j]=1.0;
+            qC[i][j][0]=1.0;
             //cout<<"A: "<<qintA[i][j]<<endl;
         }
     }
@@ -60,7 +65,7 @@ double Conc(double ***phi,double ***w,int *Ns,double ds,double *drz, double *mu)
     Q=q_partition(qdagB,qC,drz,Ns,mu);
     
 
-    // Normalizing with respect to the volume of the box
+    // Normalizing with respect to box volume
     volume=Pi*(pow((drz[0]*((double)Nr-1.0)+r_0),2.0)-pow(r_0,2.0))*(drz[1]*((double)Nz-1.0));
     Q/=volume/(2.0*Pi);
     

@@ -9,10 +9,10 @@ void parameters(double *chi,double *f,double &ds,int *Ns,double *drz,double **ch
     
     r_0=10.0;   //Distance from i=0 to the centre of the cylindre
     
-    //Interactions
-    chi[0]=20.0;
-    chi[1]=20.0;
-    chi[2]=0.0;
+    //Interaction parameters
+    chi[0]=20.0;        //Chi_AB
+    chi[1]=20.0;        //Chi_BC
+    chi[2]=0.0;         //Chi_AC
     
      //Pore Location
     tip[0]=33;

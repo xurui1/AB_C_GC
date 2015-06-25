@@ -10,6 +10,7 @@
 #include "Incomp.h"
 #include "pin.h"
 #include "output.h"
+#include "fE.h"
 #include "FreeEnergy.h"
 #include "homogfE.h"
 

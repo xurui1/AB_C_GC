@@ -37,7 +37,7 @@ double homogfE(double *mu, double **chimatrix, double *f){
 
         pA_ave=exp(mu[0]-wA_ave*f[0]-wB_ave*f[1])*f[0];
         pB_ave=exp(mu[0]-wA_ave*f[0]-wB_ave*f[1])*f[1];
-        pC_ave=exp(kappa*(mu[1]-wC_ave))*1.0;
+        pC_ave=exp(kappa*(mu[1]-wC_ave));
 
         dwA_ave=(chimatrix[0][1]*pB_ave+chimatrix[0][2]*pC_ave+eta_ave)-wA_ave;
         dwB_ave=(chimatrix[1][0]*pA_ave+chimatrix[1][2]*pC_ave+eta_ave)-wB_ave;
@@ -66,7 +66,7 @@ double homogfE(double *mu, double **chimatrix, double *f){
 
 
     for (i=0;i<3;i++){
-        for (j=0;j<3;j++){
+        for (j=i;j<3;j++){
             f_int+=p_vect[i]*p_vect[j]*chimatrix[i][j];
         }
         f_omeg+=p_vect[i]*w_vect[i];
