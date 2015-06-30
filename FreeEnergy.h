@@ -1,6 +1,6 @@
 void FreeEnergy(double ***w, double ***phi, double **eta, int *Ns, double ds, double *chi, double *drz, double **chiMatrix, double **sigma, int *tip, double *mu,double fE_hom){
     
-    
+
     double  currentfE, oldfE, deltafE;
     int     maxIter=10000;
     double precision=1e-6;          //convergence condition

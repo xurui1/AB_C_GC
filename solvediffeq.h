@@ -4,23 +4,18 @@ void Matrix_r(int ii, double **w, double *drz, double ds, double *rmid, double *
     int i;
     
     for (i=0;i<Nr;i++){
-        rmid[i]=0.0;
         rmid[i]=1.0+(ds/(pow((double)drz[0],2.0)))+(ds/4.0)*w[i][ii];
+        rupper[i]=-(ds/(2.0*pow(drz[0],2.0)))-(ds/(((drz[0]*((double)i+1.0))+r_0)*4.0*drz[0]));
+        rlower[i]=-(ds/(2.0*pow(drz[0],2.0)))+(ds/(((drz[0]*((double)i-1.0))+r_0)*4.0*drz[0]));
     }
-    
-    for (i=1;i<(int)Nr-1;i++){
-        rupper[i]=0.0;
-        rupper[i]=-(ds/(2.0*pow((double)drz[0],2.0)))-(ds/((((double)drz[0]*((double)i+1.0))+r_0)*4.0*(double)drz[0]));
-    }
-    for (i=0;i<(int)Nr-2;i++){
-        rlower[i]=0.0;
-        rlower[i]=-(ds/(2.0*pow((double)drz[0],2.0)))+(ds/((((double)drz[0]*((double)i-1.0))+r_0)*4.0*(double)drz[0]));
-    }
-    
-    rupper[0]=-ds/(pow((double)drz[0],2.0))-(ds/((((double)drz[0]*(1.0))+r_0)*4.0*(double)drz[0]))+(ds/((((double)drz[0]*(-1.0))+r_0)*4.0*(double)drz[0]));
-;
 
-    rlower[Nr-2]=-ds/(pow((double)drz[0],2.0))-(ds/((((double)drz[0]*(((double)Nr-1))+r_0)*4.0*(double)drz[0])))+(ds/((((double)drz[0]*((double)Nr-3.0))+r_0)*4.0*(double)drz[0]));
+    
+    rupper[0]=rupper[0]+rlower[0];
+    rlower[Nr-1]=rupper[Nr-1]+rlower[Nr-1];
+    rupper[Nr-1]=0.0;
+    rlower[0]=0.0;
+
+
 
 }
 
@@ -29,18 +24,15 @@ void Matrix_z(int ii, double **w, double *drz, double ds, double *zmid, double *
     int i;
     
     for (i=0;i<Nz;i++){
-        zmid[i]=0.0;
         zmid[i]=1.0+(ds/pow((double)drz[1],2.0))+(ds/4.0)*w[ii][i];
-    }
-    
-    for (i=0;i<(int)Nz-1;i++){
-        zupper[i]=0.0;
-        zlower[i]=0.0;
         zupper[i]=-(ds/(2.0*pow((double)drz[1],2.0)));
         zlower[i]=-(ds/(2.0*pow((double)drz[1],2.0)));
     }
+    
     zupper[0]=2.0*zupper[0];
-    zlower[Nz-2]=2.0*zlower[Nz-2];
+    zlower[Nz-1]=2.0*zlower[Nz-1];
+    zupper[Nz-1]=0.0;
+    zlower[0]=0.0;
     
 }
 
@@ -62,11 +54,11 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
     bvecr=create_1d_double_array(Nr, "bvecr");
     bvecz=create_1d_double_array(Nz, "bvecz");
     zmid=create_1d_double_array(Nz, "zmid");
-    zupper=create_1d_double_array(Nz-1, "zupper");
-    zlower=create_1d_double_array(Nz-1, "zlower");
+    zupper=create_1d_double_array(Nz, "zupper");
+    zlower=create_1d_double_array(Nz, "zlower");
     rmid=create_1d_double_array(Nr, "rmid");
-    rupper=create_1d_double_array(Nr-1, "rupper");
-    rlower=create_1d_double_array(Nr-1, "rlower");
+    rupper=create_1d_double_array(Nr, "rupper");
+    rlower=create_1d_double_array(Nr, "rlower");
     
     
     for (s=1;s<(int)Ns+1;s++){
