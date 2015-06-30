@@ -5,8 +5,8 @@ void Matrix_r(int ii, double **w, double *drz, double ds, double *rmid, double *
     
     for (i=0;i<Nr;i++){
         rmid[i]=1.0+(ds/(pow((double)drz[0],2.0)))+(ds/4.0)*w[i][ii];
-        rupper[i]=-(ds/(2.0*pow(drz[0],2.0)))-(ds/(((drz[0]*((double)i+1.0))+r_0)*4.0*drz[0]));
-        rlower[i]=-(ds/(2.0*pow(drz[0],2.0)))+(ds/(((drz[0]*((double)i-1.0))+r_0)*4.0*drz[0]));
+        rupper[i]=-(ds/(2.0*pow(drz[0],2.0)))-(ds/(((drz[0]*((double)i))+r_0)*4.0*drz[0]));
+        rlower[i]=-(ds/(2.0*pow(drz[0],2.0)))+(ds/(((drz[0]*((double)i))+r_0)*4.0*drz[0]));
     }
 
     
@@ -74,9 +74,9 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
             
             //Create b-vector (bvecz) for step 1
             for (j=0;j<Nz;j++){
-                gamma=1.0-(ds/(pow((double)drz[0],2.0)))-((ds/4.0)*w[i][j]);
-                betaL=(ds/(2.0*pow((double)drz[0],2.0)))-(ds/(((((double)i-1.0)*(double)drz[0])+(r_0))*4.0*(double)drz[0]));
-                betaU=(ds/(2.0*pow((double)drz[0],2.0)))+(ds/(((((double)i+1.0)*(double)drz[0])+(r_0))*4.0*(double)drz[0]));
+                gamma=1.0-(ds/(pow(drz[0],2.0)))-((ds/4.0)*w[i][j]);
+                betaL=(ds/(2.0*pow(drz[0],2.0)))-(ds/(((((double)i-1.0)*drz[0])+(r_0))*4.0*drz[0]));
+                betaU=(ds/(2.0*pow(drz[0],2.0)))+(ds/(((((double)i+1.0)*drz[0])+(r_0))*4.0*drz[0]));
                 //cout<<i<<" "<<j<<" "<<s<<" g: "<<gamma<<" bL: "<<betaL<<" bU: "<<betaU<<endl;
                 if (i==0){
                     bvecz[j]=gamma*qint[i][j]+betaL*qint[i+1][j]+betaU*qint[i+1][j];
@@ -118,9 +118,9 @@ void solvediffyQ(double ***q, double **w, double **qint, double ds, int Ns, doub
             Matrix_r(j,w,drz,ds,rmid,rupper,rlower);
             
                for (i=0;i<Nr;i++){
-                   gamma=1.0-(ds/(pow((double)drz[1],2.0)))-((ds/4.0)*w[i][j]);
-                   betaL=ds/(2.0*pow((double)drz[1],2.0));
-                   betaU=ds/(2.0*pow((double)drz[1],2.0));
+                   gamma=1.0-(ds/(pow(drz[1],2.0)))-((ds/4.0)*w[i][j]);
+                   betaL=ds/(2.0*pow(drz[1],2.0));
+                   betaU=ds/(2.0*pow(drz[1],2.0));
                    if(j==0){
                        bvecr[i]=gamma*qint[i][j]+betaL*qint[i][j+1]+betaU*qint[i][j+1];
                    }

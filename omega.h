@@ -7,9 +7,9 @@ void omega(double ***w){
     if (initial==0){
     for(i=0;i<Nr;i++){
         for(j=0;j<Nz;j++){
-            w[0][i][j]=-5.0*cos(4.0*Pi*(double)j/(double)Nz);
-            w[1][i][j]=5.0*cos(4.0*Pi*(double)j/(double)Nz);
-            w[2][i][j]=5.0;
+            w[0][i][j]=-5.0*cos(4.0*Pi*(double)j/(double)Nz)+(double)((rand() %100)/100.0);
+            w[1][i][j]=5.0*cos(4.0*Pi*(double)j/(double)Nz)+(double)((rand() %100)/100.0);
+            w[2][i][j]=5.0+(double)((rand() %100)/100.0);
         }
     }
     }

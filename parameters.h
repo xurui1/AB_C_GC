@@ -20,7 +20,7 @@ void parameters(double *chi,double *f,double &ds,int *Ns,double *drz,double **ch
     
     //Chemical potential array
     mu[0]=0.0;
-    mu[1]=-10.0;
+    mu[1]=-20.0;
     
     //Chain fraction array
     f[0]=0.5;

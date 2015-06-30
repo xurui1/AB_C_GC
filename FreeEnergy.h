@@ -22,8 +22,8 @@ void FreeEnergy(double ***w, double ***phi, double **eta, int *Ns, double ds, do
     currentfE=0.0;
     deltafE=0.0;
     
-    epsilon=0.01;
-    gamma=0.01;
+    epsilon=0.05;
+    gamma=0.05;
     
     iter=0;
     std::ofstream outputFile("./results/fE.dat");
