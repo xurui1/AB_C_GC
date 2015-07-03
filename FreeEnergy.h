@@ -56,8 +56,9 @@ void FreeEnergy(double ***w, double ***phi, double **eta, int *Ns, double ds, do
             for(j=0;j<Nz;j++){
                 for(ii=0;ii<ChainType;ii++){
                     for(jj=0;jj<ChainType;jj++){
-                        newW[ii][i][j]+=((chiMatrix[ii][jj]*phi[jj][i][j])+eta[i][j]+sigma[i][j]);
+                        newW[ii][i][j]+=((chiMatrix[ii][jj]*phi[jj][i][j]));
                     }
+                    newW[ii][jj]+=eta[i][j]+sigma[i][j];
                     delW[ii][i][j]=newW[ii][i][j]-w[ii][i][j];
                     deltaW+=fabs(delW[ii][i][j]);
                 }
